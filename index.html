@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="EL REY DEL PARLAY - Accede a la plataforma definitiva de pronósticos, parlays deportivos y resultados en tiempo real.">
+    <title>EL REY DEL PARLAY | ¿Qué vamos a apostar hoy?</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@700;800;900&family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Custom Style -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body data-character="elegante">
+    <!-- Casino & Stadium Background Lights -->
+    <div class="ambient-glow glow-gold"></div>
+    <div class="ambient-glow glow-crimson"></div>
+    <div class="ambient-glow glow-emerald"></div>
+    <div class="casino-pattern-overlay"></div>
+
+    <main class="login-wrapper">
+        <!-- Left Showcase Panel: El Rey del Parlay Host & Live Sports -->
+        <section class="showcase-panel" aria-label="Bienvenida de El Rey del Parlay">
+            <!-- Background Image Container -->
+            <div class="showcase-character-backdrop" id="character-backdrop">
+                <img id="character-main-img" src="assets/el_rey_elegante.png" alt="El Rey del Parlay"
+                    class="character-img visible">
+                <img id="character-alt-img" src="assets/el_rey_corona.png" alt="El Rey del Parlay con Corona"
+                    class="character-img hidden">
+                <div class="character-gradient-vignette"></div>
+            </div>
+
+            <!-- Foreground Content & Interactive Neon -->
+            <div class="showcase-content">
+                <!-- Top Marquee & Mode Switcher -->
+                <header class="brand-header">
+                    <!-- Casino Marquee Badge -->
+                    <div class="marquee-logo-badge">
+                        <div class="crown-icon-wrap">
+                            <i class="fa-solid fa-crown"></i>
+                        </div>
+                        <div class="marquee-text-group">
+                            <span class="marquee-subtitle">CASA OFICIAL DE LAS COMBINADAS</span>
+                            <h1 class="marquee-title">EL REY DEL <span>PARLAY</span></h1>
+                        </div>
+                    </div>
+
+                    <!-- Character Outfit Switcher -->
+                    <div class="character-switcher" title="Cambiar pose de El Rey">
+                        <button type="button" class="outfit-btn active" id="btn-outfit-elegante" data-outfit="elegante">
+                            <i class="fa-solid fa-user-tie"></i> <span>Gala</span>
+                        </button>
+                        <button type="button" class="outfit-btn" id="btn-outfit-corona" data-outfit="corona">
+                            <i class="fa-solid fa-crown"></i> <span>Corona</span>
+                        </button>
+                    </div>
+                </header>
+
+                <!-- Interactive Character Speech Bubble (Welcome Message) -->
+                <div class="character-speech-bubble" id="speech-bubble">
+                    <div class="bubble-tail"></div>
+                    <div class="bubble-header">
+                        <span class="bubble-author"><i class="fa-solid fa-crown"></i> EL REY TE DA LA BIENVENIDA:</span>
+                        <span class="bubble-badge">HOST VIP</span>
+                    </div>
+                    <p class="bubble-text" id="bubble-quote">
+                        "¡Pasa mi estimado! Toma asiento... ¿Qué vamos a apostar hoy? Hoy le pegamos al verde sí o sí."
+                    </p>
+                    <div class="bubble-quick-quotes">
+                        <button type="button" class="quote-pill"
+                            data-quote="¡Hoy sí cobramos la combinada! Dale con fe.">🎲 Hoy se cobra</button>
+                        <button type="button" class="quote-pill"
+                            data-quote="Ni le pegamos a la vieja pero aquí seguimos firmes.">🔥 Actitud Parlay</button>
+                        <button type="button" class="quote-pill"
+                            data-quote="Pon tu correo y contraseña que ya empieza el partido.">⚡ Entrar rápido</button>
+                    </div>
+                </div>
+
+                <!-- Floating Live Sports & Bet Slip Widgets -->
+                <div class="showcase-widgets">
+                    <!-- Live Match Card (Conectado a APIs deportivas reales ESPN) -->
+                    <div class="widget-card match-widget" id="live-match-widget">
+                        <div class="match-header-row">
+                            <div class="match-league" id="match-league-wrap">
+                                <span id="match-league-title"><i class="fa-solid fa-futbol"></i> UEFA Champions
+                                    League</span>
+                            </div>
+                            <div class="match-status-badge" id="match-status-badge">
+                                <span class="sync-pulse"></span>
+                                <span class="match-time" id="match-status-text">Cargando...</span>
+                            </div>
+                        </div>
+
+                        <div class="match-teams" id="match-teams-container">
+                            <div class="team team-home">
+                                <div class="team-logo-wrap">
+                                    <img id="team1-logo" class="team-real-logo"
+                                        src="https://a.espncdn.com/i/teamlogos/soccer/500/2572.png" alt="Equipo 1"
+                                        onerror="this.style.display='none'; document.getElementById('team1-badge-fallback').style.display='flex';">
+                                    <span id="team1-badge-fallback" class="team-badge red"
+                                        style="display: none;">RM</span>
+                                </div>
+                                <span class="team-name" id="team1-name">Real Madrid</span>
+                                <span class="team-score" id="team1-score">2</span>
+                            </div>
+                            <div class="match-vs-wrap">
+                                <span class="match-vs">VS</span>
+                                <span class="match-venue" id="match-venue-text">Bernabéu</span>
+                            </div>
+                            <div class="team team-away">
+                                <span class="team-score" id="team2-score">1</span>
+                                <span class="team-name" id="team2-name">Man. City</span>
+                                <div class="team-logo-wrap">
+                                    <img id="team2-logo" class="team-real-logo"
+                                        src="https://a.espncdn.com/i/teamlogos/soccer/500/360.png" alt="Equipo 2"
+                                        onerror="this.style.display='none'; document.getElementById('team2-badge-fallback').style.display='flex';">
+                                    <span id="team2-badge-fallback" class="team-badge blue"
+                                        style="display: none;">MC</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="match-stat-bar">
+                            <div class="stat-info">
+                                <span id="match-stat-label">Métrica en Vivo</span>
+                                <span id="match-stat-value">54% - 46%</span>
+                            </div>
+                            <div class="bar-container">
+                                <div class="bar-fill" id="match-stat-bar" style="width: 54%;"></div>
+                            </div>
+                        </div>
+
+                        <!-- Match Controls & ESPN API Info -->
+                        <div class="match-controls">
+                            <div class="api-meta">
+                                <span class="api-live-tag"><i class="fa-solid fa-satellite-dish"></i> <span
+                                        id="api-status-label">API ESPN Deportes</span></span>
+                                <span class="match-counter" id="match-counter-label">1 de 1</span>
+                            </div>
+                            <div class="match-nav-btns">
+                                <button type="button" class="btn-nav" id="btn-prev-match" title="Partido anterior"
+                                    aria-label="Partido anterior">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </button>
+                                <button type="button" class="btn-nav" id="btn-refresh-match"
+                                    title="Actualizar datos reales" aria-label="Actualizar marcador">
+                                    <i class="fa-solid fa-rotate" id="refresh-icon"></i>
+                                </button>
+                                <button type="button" class="btn-nav" id="btn-next-match" title="Siguiente partido"
+                                    aria-label="Siguiente partido">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Parlay Odds Quick Card -->
+                    <div class="widget-card parlay-ticket-widget">
+                        <div class="ticket-header">
+                            <span class="ticket-label"><i class="fa-solid fa-receipt"></i> PARLAY DEL DÍA</span>
+                            <span class="multiplier-pill">+485</span>
+                        </div>
+                        <ul class="ticket-picks">
+                            <li><i class="fa-solid fa-check"></i> Real Madrid o Empate</li>
+                            <li><i class="fa-solid fa-check"></i> Lakers +4.5 Pts</li>
+                            <li><i class="fa-solid fa-spinner fa-spin-pulse"></i> Más de 2.5 Goles</li>
+                        </ul>
+                        <div class="ticket-footer">
+                            <span>Apuesta: <strong>$100</strong></span>
+                            <span class="payout-text">Cobro: <strong>$585.00</strong></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Showcase Footer: Sport Filter Pills -->
+                <footer class="showcase-footer">
+                    <div class="sport-tags">
+                        <span class="sport-tag active" data-sport="futbol"><i class="fa-solid fa-futbol"></i>
+                            Fútbol</span>
+                        <span class="sport-tag" data-sport="basket"><i class="fa-solid fa-basketball"></i> NBA
+                            Basket</span>
+                        <span class="sport-tag" data-sport="f1"><i class="fa-solid fa-flag-checkered"></i> Formula
+                            1</span>
+                        <span class="sport-tag" data-sport="tennis"><i class="fa-solid fa-baseball-bat-ball"></i>
+                            Tenis</span>
+                    </div>
+                </footer>
+            </div>
+        </section>
+
+        <!-- Right Authentication Panel -->
+        <section class="auth-panel" aria-label="Formulario de inicio de sesión de El Rey del Parlay">
+            <div class="auth-card">
+                <!-- Mobile Crown Branding -->
+                <div class="mobile-brand">
+                    <div class="crown-icon-wrap">
+                        <i class="fa-solid fa-crown"></i>
+                    </div>
+                    <div class="marquee-text-group">
+                        <h2 class="marquee-title">EL REY DEL <span>PARLAY</span></h2>
+                    </div>
+                </div>
+
+                <!-- Form Heading with Character Motto -->
+                <div class="auth-header">
+                    <div class="neon-pill-tag">
+                        <span class="glowing-dot"></span> ¿QUÉ VAMOS A APOSTAR HOY?
+                    </div>
+                    <h2 id="auth-title">Acceso a la Mesa Real</h2>
+                    <p id="auth-subtitle">Ingresa tus credenciales para ver tus parlays, marcadores en tiempo real y
+                        cuotas exclusivas.</p>
+                </div>
+
+                <!-- Tab Switcher (Login vs Register) -->
+                <nav class="auth-tabs" aria-label="Selector de autenticación">
+                    <button type="button" class="tab-btn active" id="tab-login" aria-selected="true">
+                        <i class="fa-solid fa-right-to-bracket"></i> Iniciar Sesión
+                    </button>
+                    <button type="button" class="tab-btn" id="tab-register" aria-selected="false">
+                        <i class="fa-solid fa-crown"></i> Unirse al Club
+                    </button>
+                    <div class="tab-indicator"></div>
+                </nav>
+
+                <!-- Social Quick Login -->
+                <div class="social-login">
+                    <button type="button" class="social-btn google" id="btn-google" title="Continuar con Google">
+                        <svg viewBox="0 0 24 24" width="18" height="18" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                                fill="#4285F4" />
+                            <path
+                                d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                                fill="#34A853" />
+                            <path
+                                d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
+                                fill="#FBBC05" />
+                            <path
+                                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
+                                fill="#EA4335" />
+                        </svg>
+                        <span>Google</span>
+                    </button>
+                    <button type="button" class="social-btn apple" id="btn-apple" title="Continuar con Apple">
+                        <i class="fa-brands fa-apple"></i>
+                        <span>Apple</span>
+                    </button>
+                    <button type="button" class="social-btn discord" id="btn-discord" title="Continuar con Discord">
+                        <i class="fa-brands fa-discord"></i>
+                        <span>Discord</span>
+                    </button>
+                </div>
+
+                <!-- Divider -->
+                <div class="auth-divider">
+                    <span>o con tu correo registrado</span>
+                </div>
+
+                <!-- Form -->
+                <form id="auth-form" class="auth-form" autocomplete="on" novalidate>
+                    <!-- Extra Field for Register (Name / Apodo del apostador) -->
+                    <div class="input-group hidden" id="group-name">
+                        <label for="user-name">Nombre o Apodo de Apostador</label>
+                        <div class="input-field">
+                            <i class="fa-regular fa-user field-icon"></i>
+                            <input type="text" id="user-name" placeholder="Ej. El Rompe Casas" autocomplete="name">
+                        </div>
+                        <span class="field-error" id="error-name"></span>
+                    </div>
+
+                    <!-- Email Field -->
+                    <div class="input-group" id="group-email">
+                        <label for="user-email">Correo Electrónico</label>
+                        <div class="input-field">
+                            <i class="fa-regular fa-envelope field-icon"></i>
+                            <input type="email" id="user-email" placeholder="apostador@elreydelparlay.com" required
+                                autocomplete="email">
+                        </div>
+                        <span class="field-error" id="error-email"></span>
+                    </div>
+
+                    <!-- Password Field -->
+                    <div class="input-group" id="group-password">
+                        <div class="label-row">
+                            <label for="user-password">Contraseña Secreta</label>
+                            <a href="#forgot" class="forgot-link" id="link-forgot">¿Olvidaste tu clave?</a>
+                        </div>
+                        <div class="input-field">
+                            <i class="fa-solid fa-lock field-icon"></i>
+                            <input type="password" id="user-password" placeholder="Tu contraseña ganadora" required
+                                autocomplete="current-password">
+                            <button type="button" class="toggle-password" id="toggle-password"
+                                aria-label="Mostrar contraseña">
+                                <i class="fa-regular fa-eye" id="eye-icon"></i>
+                            </button>
+                        </div>
+                        <span class="field-error" id="error-password"></span>
+                    </div>
+
+                    <!-- Extra Field for Register (Confirm Password) -->
+                    <div class="input-group hidden" id="group-confirm">
+                        <label for="user-confirm">Confirmar Contraseña</label>
+                        <div class="input-field">
+                            <i class="fa-solid fa-shield-halved field-icon"></i>
+                            <input type="password" id="user-confirm" placeholder="Confirma tu contraseña">
+                        </div>
+                        <span class="field-error" id="error-confirm"></span>
+                    </div>
+
+                    <!-- Checkbox -->
+                    <div class="form-options">
+                        <label class="custom-checkbox">
+                            <input type="checkbox" id="remember-me" checked>
+                            <span class="checkmark"></span>
+                            <span class="checkbox-label" id="label-remember">Mantener mi sesión iniciada</span>
+                        </label>
+                    </div>
+
+                    <!-- Golden Submit Button -->
+                    <button type="submit" class="submit-btn gold-glow" id="btn-submit">
+                        <span class="btn-text">ENTRAR AL PARLAY</span>
+                        <div class="btn-icon">
+                            <i class="fa-solid fa-crown"></i>
+                        </div>
+                        <div class="btn-shine"></div>
+                    </button>
+                </form>
+
+                <!-- Security & Casino Assist -->
+                <div class="auth-security-badge">
+                    <i class="fa-solid fa-dice"></i>
+                    <span>Juego seguro, cuotas garantizadas & datos en vivo ESPN</span>
+                </div>
+
+                <!-- Footer Switcher Link -->
+                <div class="auth-card-footer">
+                    <p id="footer-switch-text">¿Nuevo en el reino? <button type="button" class="link-switch"
+                            id="btn-switch-action">Regístrate gratis aquí</button></p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Interactive Toast Notification -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Script -->
+    <script src="script.js"></script>
+</body>
+
+</html>
