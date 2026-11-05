@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="EL REY DEL PARLAY - Panel Principal de Pronósticos y Parlays Deportivos">
+    <title>EL REY DEL PARLAY | Panel de Control VIP</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@700;800;900&family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="home.css">
+</head>
+
+<body>
+    <!-- Ambient Casino Glows -->
+    <div class="ambient-glow glow-gold"></div>
+    <div class="ambient-glow glow-crimson"></div>
+    <div class="ambient-glow glow-emerald"></div>
+    <div class="casino-pattern-overlay"></div>
+
+    <main class="dashboard-wrapper">
+        <!-- Top Navbar -->
+        <header class="dash-nav">
+            <a href="home.html" class="dash-brand">
+                <div class="crown-icon-wrap">
+                    <i class="fa-solid fa-crown"></i>
+                </div>
+                <div class="marquee-text-group">
+                    <span class="marquee-subtitle">CASA DE LAS COMBINADAS</span>
+                    <h1 class="marquee-title" style="font-size: 20px;">EL REY DEL <span style="color: var(--gold-primary);">PARLAY</span></h1>
+                </div>
+            </a>
+
+            <nav class="dash-nav-links">
+                <button type="button" class="nav-link-btn active"><i class="fa-solid fa-dice"></i> Inicio</button>
+                <button type="button" class="nav-link-btn"><i class="fa-solid fa-futbol"></i> Marcadores</button>
+                <button type="button" class="nav-link-btn"><i class="fa-solid fa-receipt"></i> Mis Parlays</button>
+                <button type="button" class="nav-link-btn"><i class="fa-solid fa-trophy"></i> Pronósticos VIP</button>
+            </nav>
+
+            <div class="dash-user-actions">
+                <div class="user-balance-badge" title="Tus Fichas VIP">
+                    <i class="fa-solid fa-coins"></i>
+                    <span id="user-balance">1,500</span> Coins
+                </div>
+
+                <div class="user-profile-badge">
+                    <div class="user-avatar-icon">
+                        <i class="fa-solid fa-crown"></i>
+                    </div>
+                    <span class="user-name-text" id="nav-user-name">Cargando...</span>
+                </div>
+
+                <button type="button" class="btn-logout" id="btn-logout" title="Cerrar sesión">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    <span>Salir</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="dash-hero">
+            <div class="dash-hero-content">
+                <div class="dash-vip-tag">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <span>SALA VIP AUTORIZADA</span>
+                </div>
+                <h2 class="dash-hero-title">
+                    ¡Bienvenido a la Corte, <span id="hero-user-name">Apostador</span>!
+                </h2>
+                <p class="dash-hero-desc">
+                    El Rey te da la bienvenida formal a la mesa alta de pronósticos deportivos. Las cuotas están calientes y el verde nos espera. ¿Qué vamos a apostar hoy?
+                </p>
+                <div class="dash-hero-actions">
+                    <button type="button" class="hero-btn-primary" id="btn-armar-parlay">
+                        <i class="fa-solid fa-fire"></i>
+                        <span>ARMAR PARLAY DEL DÍA</span>
+                    </button>
+                    <button type="button" class="hero-btn-secondary" id="btn-ver-marcadores">
+                        <i class="fa-solid fa-clock"></i>
+                        <span>Ver Marcadores en Vivo</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="dash-hero-media">
+                <img src="assets/el_rey_corona.png" alt="El Rey del Parlay con Corona" class="dash-hero-img">
+            </div>
+        </section>
+
+        <!-- Stats Bar -->
+        <section class="dash-stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon gold">
+                    <i class="fa-solid fa-wallet"></i>
+                </div>
+                <div>
+                    <div class="stat-label">Saldo Disponible</div>
+                    <div class="stat-value">$1,500 <span style="font-size: 13px; color: var(--gold-light);">COINS</span></div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon green">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+                <div>
+                    <div class="stat-label">Parlays Cobrados</div>
+                    <div class="stat-value">14 <span style="font-size: 13px; color: var(--win-green);">VERDES</span></div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon red">
+                    <i class="fa-solid fa-fire-flame-curved"></i>
+                </div>
+                <div>
+                    <div class="stat-label">Racha Activa</div>
+                    <div class="stat-value">4 <span style="font-size: 13px; color: var(--parlay-red);">SEGUIDOS</span></div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon purple">
+                    <i class="fa-solid fa-gem"></i>
+                </div>
+                <div>
+                    <div class="stat-label">Rango Apostador</div>
+                    <div class="stat-value">VIP Oro</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Content Grid: Parlay of the day & Active Bets -->
+        <section class="dash-content-grid">
+            <!-- Left: Recommended Parlay -->
+            <div class="dash-panel">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <i class="fa-solid fa-crown"></i>
+                        <span>PARLAY RECOMENDADO POR EL REY</span>
+                    </div>
+                    <span class="match-status-badge" style="background: rgba(0, 230, 118, 0.15); border-color: var(--win-green); color: var(--win-green);">
+                        <span class="sync-pulse"></span> ALTA PROBABILIDAD
+                    </span>
+                </div>
+
+                <div class="parlay-picks-list">
+                    <div class="parlay-pick-item">
+                        <div class="pick-sport-icon">
+                            <i class="fa-solid fa-futbol"></i>
+                        </div>
+                        <div class="pick-info">
+                            <div class="pick-match">Real Madrid vs Manchester City</div>
+                            <div class="pick-selection"><i class="fa-solid fa-check"></i> Ambos Equipos Anotan + Más de 2.5 Goles</div>
+                        </div>
+                        <div class="pick-odds">+1.85</div>
+                    </div>
+
+                    <div class="parlay-pick-item">
+                        <div class="pick-sport-icon">
+                            <i class="fa-solid fa-basketball"></i>
+                        </div>
+                        <div class="pick-info">
+                            <div class="pick-match">Los Angeles Lakers vs Golden State Warriors</div>
+                            <div class="pick-selection"><i class="fa-solid fa-check"></i> Lakers Ganador Directo (Moneyline)</div>
+                        </div>
+                        <div class="pick-odds">+1.90</div>
+                    </div>
+
+                    <div class="parlay-pick-item">
+                        <div class="pick-sport-icon">
+                            <i class="fa-solid fa-flag-checkered"></i>
+                        </div>
+                        <div class="pick-info">
+                            <div class="pick-match">Gran Premio de Mónaco - F1</div>
+                            <div class="pick-selection"><i class="fa-solid fa-check"></i> Max Verstappen termina en el Podio (Top 3)</div>
+                        </div>
+                        <div class="pick-odds">+1.60</div>
+                    </div>
+                </div>
+
+                <div class="parlay-total-bar">
+                    <div>
+                        <div style="font-size: 12px; color: var(--text-secondary); text-transform: uppercase; font-weight: 700;">Cuota Combinada Total</div>
+                        <div class="total-odds-val">+5.62 <span style="font-size: 13px; color: var(--text-primary); font-weight: 500;">(Paga $56.20 por cada $10)</span></div>
+                    </div>
+                    <button type="button" class="submit-btn gold-glow" id="btn-copiar-parlay" style="width: auto; padding: 12px 24px;">
+                        <span class="btn-text">COPIAR ESTA COMBINADA</span>
+                        <div class="btn-icon">
+                            <i class="fa-solid fa-bolt"></i>
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Right: Mis Apuestas Activas -->
+            <div class="dash-panel">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <i class="fa-solid fa-receipt"></i>
+                        <span>TUS APUESTAS ACTIVAS</span>
+                    </div>
+                    <span style="font-size: 13px; color: var(--gold-light); font-weight: 700;">2 PENDIENTES</span>
+                </div>
+
+                <div class="parlay-picks-list">
+                    <div class="parlay-pick-item" style="border-left: 3px solid var(--win-green);">
+                        <div class="pick-info">
+                            <div class="pick-match">Combinada Champions League (3 Selecciones)</div>
+                            <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Apostado: 50 Coins | Retorno: 320 Coins</div>
+                        </div>
+                        <span style="color: var(--win-green); font-weight: 800; font-size: 13px;">EN JUEGO</span>
+                    </div>
+
+                    <div class="parlay-pick-item" style="border-left: 3px solid var(--gold-primary);">
+                        <div class="pick-info">
+                            <div class="pick-match">NBA Parlay - Triunfo Lakers & Celtics</div>
+                            <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Apostado: 100 Coins | Retorno: 260 Coins</div>
+                        </div>
+                        <span style="color: var(--gold-primary); font-weight: 800; font-size: 13px;">HOY 20:00</span>
+                    </div>
+                </div>
+
+                <div style="margin-top: 20px; text-align: center;">
+                    <a href="index.html" style="color: var(--text-secondary); text-decoration: none; font-size: 13px; font-weight: 600;">
+                        <i class="fa-solid fa-arrow-left"></i> Volver a la pantalla de Acceso
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Interactive Toast Notification Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Supabase JS Client CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- Home Script -->
+    <script src="home.js"></script>
+</body>
+
+</html>
+

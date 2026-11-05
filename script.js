@@ -2,6 +2,44 @@
 // EL REY DEL PARLAY - Real Character Host & Live Sportsbook Logic
 // ==========================================================================
 
+// --- Supabase Client Configuration ---
+const SUPABASE_URL = 'https://ikydrfxnqffgzbfiucun.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_aL2_SthV-fqdLkk19OkCiw_k5x3SxwO';
+let supabaseClient = null;
+
+function getSupabase() {
+    if (!supabaseClient && window.supabase && typeof window.supabase.createClient === 'function') {
+        try {
+            supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        } catch (err) {
+            console.error('Error inicializando cliente de Supabase:', err);
+        }
+    }
+    return supabaseClient;
+}
+
+// Helper to translate Supabase errors to friendly messages
+function formatSupabaseError(error) {
+    if (!error) return 'Ocurrió un error inesperado.';
+    const msg = error.message || '';
+    if (msg.includes('Invalid login credentials')) {
+        return 'Correo o contraseña incorrectos. Verifica tus datos.';
+    }
+    if (msg.includes('User already registered')) {
+        return 'Este correo ya está registrado. Intenta iniciar sesión.';
+    }
+    if (msg.includes('Password should be at least')) {
+        return 'La contraseña debe tener al menos 6 caracteres.';
+    }
+    if (msg.includes('Email not confirmed')) {
+        return 'Debes confirmar tu correo electrónico antes de ingresar.';
+    }
+    if (msg.includes('rate limit')) {
+        return 'Demasiados intentos. Espera unos momentos antes de reintentar.';
+    }
+    return msg;
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     // --- Character & Welcome Elements ---
     const imgElegante = document.getElementById('character-main-img');
@@ -21,18 +59,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnText = btnSubmit.querySelector('.btn-text');
     const btnSwitchAction = document.getElementById('btn-switch-action');
     const footerSwitchText = document.getElementById('footer-switch-text');
-    
+
     const groupName = document.getElementById('group-name');
     const groupConfirm = document.getElementById('group-confirm');
     const labelRemember = document.getElementById('label-remember');
     const linkForgot = document.getElementById('link-forgot');
-    
+
     const authForm = document.getElementById('auth-form');
     const inputEmail = document.getElementById('user-email');
     const inputPassword = document.getElementById('user-password');
     const inputName = document.getElementById('user-name');
     const inputConfirm = document.getElementById('user-confirm');
-    
+
     const togglePasswordBtn = document.getElementById('toggle-password');
     const eyeIcon = document.getElementById('eye-icon');
 
@@ -531,17 +569,42 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.field-error').forEach(el => el.textContent = '');
     }
 
+    // --- Session Persistence Check on Load ---
+    async function checkActiveSession() {
+        const client = getSupabase();
+        if (!client) return;
+        try {
+            const { data, error } = await client.auth.getSession();
+            if (error) {
+                console.warn('Error getSession:', error);
+                return;
+            }
+            if (data && data.session && data.session.user) {
+                const user = data.session.user;
+                const userName = user.user_metadata?.full_name || user.email.split('@')[0];
+                showToast('info', `Sesión Activa: ${userName}`, 'Redirigiendo a tu panel de inicio...');
+                setBubbleMessage(`"¡Qué bueno verte de vuelta, ${userName}! Vamos directo a tu mesa VIP."`);
+                setTimeout(() => {
+                    window.location.href = 'home.html';
+                }, 1500);
+            }
+        } catch (err) {
+            console.warn('Error verificando sesión en Supabase:', err);
+        }
+    }
+
     if (authForm) {
-        authForm.addEventListener('submit', (e) => {
+        authForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             clearErrors();
 
             let isValid = true;
             const emailVal = inputEmail.value.trim();
             const passwordVal = inputPassword.value;
+            let nameVal = '';
 
             if (currentAuthMode === 'register') {
-                const nameVal = inputName.value.trim();
+                nameVal = inputName.value.trim();
                 const confirmVal = inputConfirm.value;
 
                 if (!nameVal) {
@@ -572,53 +635,126 @@ document.addEventListener('DOMContentLoaded', () => {
                 isValid = false;
             }
 
-            if (isValid) {
-                btnSubmit.disabled = true;
-                const originalText = btnText.textContent;
-                btnText.textContent = 'VALIDANDO CON EL REY...';
-                btnSubmit.style.opacity = '0.85';
-                setBubbleMessage('"Verificando tus datos... si todo está en orden, hoy te coronas."');
-
-                setTimeout(() => {
-                    btnSubmit.disabled = false;
-                    btnText.textContent = originalText;
-                    btnSubmit.style.opacity = '1';
-
-                    if (currentAuthMode === 'login') {
-                        showToast('success', '¡Bienvenido al Parlay!', `Acceso concedido a ${emailVal}`);
-                        setBubbleMessage('"¡Listo mi rey! Entraste con éxito. A revisar las combinadas del día."');
-                    } else {
-                        showToast('success', '¡Cuenta Creada!', 'Bienvenido a la corte oficial de El Rey del Parlay.');
-                        setBubbleMessage('"¡Felicidades! Ya eres parte oficial del Club. A romper las cuotas."');
-                    }
-                }, 1200);
-            } else {
+            if (!isValid) {
                 showToast('error', 'Revisa tus datos', 'Hay campos incompletos en el formulario.');
                 setBubbleMessage('"Ojo ahí, te faltaron unos datos. Completa todo bien para poder entrar."');
+                return;
+            }
+
+            const client = getSupabase();
+            if (!client) {
+                showToast('error', 'Error de conexión', 'No se pudo conectar con Supabase. Revisa la conexión de red.');
+                return;
+            }
+
+            btnSubmit.disabled = true;
+            const originalText = btnText.textContent;
+            btnText.textContent = 'CONECTANDO CON SUPABASE...';
+            btnSubmit.style.opacity = '0.85';
+            setBubbleMessage('"Consultando con el Rey y la base de datos... aguarda un momento."');
+
+            try {
+                if (currentAuthMode === 'login') {
+                    // --- Login Real con Supabase ---
+                    const { data, error } = await client.auth.signInWithPassword({
+                        email: emailVal,
+                        password: passwordVal
+                    });
+
+                    if (error) {
+                        showToast('error', 'Fallo al iniciar sesión', formatSupabaseError(error));
+                        setBubbleMessage('"Mmm... tus credenciales no coinciden. Revisa tu correo o contraseña."');
+                    } else {
+                        const userName = data.user?.user_metadata?.full_name || emailVal.split('@')[0];
+                        showToast('success', '¡Bienvenido al Parlay!', `Acceso concedido a ${userName}`);
+                        setBubbleMessage(`"¡Listo mi rey ${userName}! Entraste con éxito. Entrando a tu mesa VIP..."`);
+                        setTimeout(() => {
+                            window.location.href = 'home.html';
+                        }, 1000);
+                    }
+                } else {
+                    // --- Registro Real con Supabase ---
+                    const { data, error } = await client.auth.signUp({
+                        email: emailVal,
+                        password: passwordVal,
+                        options: {
+                            data: {
+                                full_name: nameVal
+                            }
+                        }
+                    });
+
+                    if (error) {
+                        showToast('error', 'Error al crear cuenta', formatSupabaseError(error));
+                        setBubbleMessage('"Hubo un detalle al crear la cuenta. Verifica que los datos sean correctos."');
+                    } else if (data.user && !data.session) {
+                        showToast('info', '¡Registro Exitoso!', 'Revisa tu correo para confirmar tu cuenta (o desactiva Confirm Email en Supabase).');
+                        setBubbleMessage('"¡Cuenta creada! Te mandé un correo de confirmación. Verifícalo y volvemos."');
+                    } else {
+                        showToast('success', '¡Cuenta Creada!', `Bienvenido ${nameVal} a la corte oficial de El Rey del Parlay.`);
+                        setBubbleMessage('"¡Felicidades! Ya eres parte oficial del Club. Entrando a tu mesa VIP..."');
+                        setTimeout(() => {
+                            window.location.href = 'home.html';
+                        }, 1200);
+                    }
+                }
+            } catch (err) {
+                console.error('Error durante autenticación:', err);
+                showToast('error', 'Error de conexión', 'No se pudo contactar a la base de datos.');
+            } finally {
+                btnSubmit.disabled = false;
+                btnText.textContent = originalText;
+                btnSubmit.style.opacity = '1';
             }
         });
     }
 
-    // --- Social Login Simulation ---
+    // --- Social Login with Supabase OAuth ---
     ['btn-google', 'btn-apple', 'btn-discord'].forEach(btnId => {
         const btn = document.getElementById(btnId);
         if (btn) {
-            btn.addEventListener('click', () => {
-                const service = btn.innerText.trim();
-                showToast('info', `Conexión con ${service}`, 'Iniciando autenticación externa...');
-                setBubbleMessage(`"Conectando vía ${service}. Seguridad total garantizada."`);
+            btn.addEventListener('click', async () => {
+                const service = btnId.replace('btn-', '');
+                showToast('info', `Conexión con ${btn.innerText.trim()}`, 'Redirigiendo a autenticación...');
+                setBubbleMessage(`"Conectando vía ${btn.innerText.trim()}. Seguridad total garantizada."`);
+
+                const client = getSupabase();
+                if (client) {
+                    const { error } = await client.auth.signInWithOAuth({
+                        provider: service,
+                        options: {
+                            redirectTo: window.location.origin + window.location.pathname
+                        }
+                    });
+                    if (error) {
+                        showToast('error', 'Proveedor externo', `Para usar ${service}, actívalo en Supabase > Authentication > Providers.`);
+                    }
+                }
             });
         }
     });
 
     // --- Forgot Password Link ---
     if (linkForgot) {
-        linkForgot.addEventListener('click', (e) => {
+        linkForgot.addEventListener('click', async (e) => {
             e.preventDefault();
             const email = prompt('Ingresa tu correo para recuperar tu contraseña:', inputEmail.value || '');
             if (email) {
-                showToast('success', 'Recuperación enviada', `Revisa tu correo: ${email}`);
-                setBubbleMessage('"Te mandé el correo de recuperación. Cámbiala y vuelve a la jugada."');
+                const client = getSupabase();
+                if (!client) {
+                    showToast('error', 'Error', 'Supabase no está disponible.');
+                    return;
+                }
+                showToast('info', 'Enviando...', 'Solicitando restablecimiento de clave...');
+                setBubbleMessage('"Buscando tu cuenta en la corte del parlay..."');
+                const { error } = await client.auth.resetPasswordForEmail(email.trim());
+                if (error) {
+                    showToast('error', 'Error', formatSupabaseError(error));
+                    setBubbleMessage('"No pudimos enviar el correo de recuperación. Revisa la dirección."');
+                } else {
+                    showToast('success', 'Recuperación enviada', `Revisa tu correo: ${email}`);
+                    setBubbleMessage('"Te mandé el correo de recuperación. Cámbiala y vuelve a la jugada."');
+                }
             }
         });
     }
@@ -667,6 +803,7 @@ document.addEventListener('DOMContentLoaded', () => {
         fetchRealSportData(currentSport, true);
     }, 60000);
 
-    // Initial Data Fetch
+    // Initial Data Fetch & Supabase Session Check
+    checkActiveSession();
     fetchRealSportData('futbol', true);
 });
